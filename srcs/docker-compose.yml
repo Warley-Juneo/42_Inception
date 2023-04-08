@@ -6,23 +6,31 @@ services:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     container_name: nginx
-    # depends_on:
-    #   - wordpress
+    depends_on:
+      - wordpress
     ports:
-      - "80:443"
-      # - "443:443"
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/wordpress
 
-  # wordpress:
-  #   build:
-  #     context: ./requirements/wordpress
-  #     dockerfile: Dockerfile
-  #   container_name: wordpress
-  #   ports:
-  #     - "9000:9000"
-  #   environment:
-  #     WORDPRESS_DB_HOST: db
-  #     WORDPRESS_DB_USER: wordpress
-  #     WORDPRESS_DB_PASSWORD: wordpress
-  #     WORDPRESS_DB_NAME: wordpress
-  #   networks:
-  #     - my-network
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+     - wordpress_data:/var/www/wordpress
+
+volumes:
+  wordpress_data:
+    driver: local
+
+  nginx_data:
+    driver: local
